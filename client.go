@@ -1,4 +1,4 @@
-package client
+package bugyo_client_go
 
 import (
 	"errors"
@@ -25,6 +25,7 @@ type bugyoClient struct {
 	config   *BugyoConfig
 	token    string
 	userCode string
+	lastReq  *url.URL
 	debug    bool
 }
 
@@ -57,7 +58,6 @@ func NewClient(config *BugyoConfig, debug bool) (BugyoClient, error) {
 	return &bugyoClient{client: client, config: config, debug: debug}, nil
 }
 
-
 func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	req, err := http.NewRequest(http.MethodGet, uri, nil)
 	if err != nil {
@@ -65,6 +65,11 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	}
 
 	req.Header.Add("User-Agent", userAgent)
+	if ref := b.refererForURL(b.lastReq); ref != "" {
+		req.Header.Set("Referer", ref)
+	}
+
+	defer b.setLastReq(req.URL)
 
 	if b.debug {
 		reqDump, _ := httputil.DumpRequest(req, false)
@@ -100,6 +105,10 @@ func (b *bugyoClient) post(domain, endpoint string, body url.Values) (*goquery.D
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("__RequestVerificationToken", b.token)
 	req.Header.Add("X-Requested-With", "XMLHttpRequest")
+	if ref := b.refererForURL(b.lastReq); ref != "" {
+		req.Header.Set("Referer", ref)
+	}
+	defer b.setLastReq(req.URL)
 
 	if b.debug {
 		reqDump, _ := httputil.DumpRequest(req, true)
@@ -122,5 +131,18 @@ func (b *bugyoClient) post(domain, endpoint string, body url.Values) (*goquery.D
 	if err != nil {
 		return nil, err
 	}
+
+	b.lastReq = req.URL
 	return doc, nil
+}
+
+func (b *bugyoClient) refererForURL(lastReq *url.URL) string {
+	if lastReq == nil {
+		return ""
+	}
+	return lastReq.String()
+}
+
+func (b *bugyoClient) setLastReq(lastReq *url.URL) {
+	b.lastReq = lastReq
 }

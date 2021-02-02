@@ -1,7 +1,6 @@
-package client_test
+package bugyo_client_go
 
 import (
-	"bugyo-client-go/client"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/stretchr/testify/assert"
@@ -13,13 +12,13 @@ func TestBugyoClient_Login(t *testing.T) {
 		t.Error(err)
 		t.FailNow()
 	}
-	var config client.BugyoConfig
+	var config BugyoConfig
 	if err := envconfig.Process("", &config); err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
 
-	c, err := client.NewClient(&config, true)
+	c, err := NewClient(&config, true)
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
