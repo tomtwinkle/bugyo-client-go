@@ -1,4 +1,4 @@
-module bugyo-client-go
+module github.com/tomtwinkle/bugyo-client-go
 
 go 1.15
 
