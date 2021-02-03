@@ -1,4 +1,4 @@
-package bugyo_client_go
+package bugyoclient
 
 import (
 	"github.com/joho/godotenv"
@@ -18,7 +18,7 @@ func TestBugyoClient_Login(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := NewClient(&config, true)
+	c, err := NewClient(&config, WithDebug())
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
