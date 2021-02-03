@@ -2,7 +2,6 @@ package bugyoclient
 
 import (
 	"errors"
-	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
 	"net/http"
@@ -13,7 +12,15 @@ import (
 )
 
 const userAgent = "Bugyo-Client-Go/1.0.0"
-const baseUri = "https://id.obc.jp"
+
+const (
+	urlLoginPage = "https://id.obc.jp/%s"
+	urlCheckAuthenticationMethod = "https://id.obc.jp/%s/login/CheckAuthenticationMethod"
+	urlAuthenticate = "https://id.obc.jp/%s/login/login/?Length=5"
+	urlUserCode = "https://id.obc.jp/%s/omredirect/redirect/"
+	urlPunchmarkPage = "https://hromssp.obc.jp/%s/%s/timeclock/punchmark/"
+	urlInsertReadDateTime = "https://hromssp.obc.jp/%s/%s/TimeClock/InsertReadDateTime/"
+)
 
 type BugyoClient interface {
 	Login() error
@@ -82,10 +89,6 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	}
 
 	req.Header.Add("User-Agent", userAgent)
-	if ref := b.refererForURL(b.lastReq); ref != "" {
-		req.Header.Set("Referer", ref)
-	}
-
 	defer b.setLastReq(req.URL)
 
 	if b.debug {
@@ -112,8 +115,7 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	return doc, nil
 }
 
-func (b *bugyoClient) post(domain, endpoint string, body url.Values) (*goquery.Document, error) {
-	uri := fmt.Sprintf("%s/%s", domain, endpoint)
+func (b *bugyoClient) post(uri string, body url.Values) (*goquery.Document, error) {
 	req, err := http.NewRequest(http.MethodPost, uri, strings.NewReader(body.Encode()))
 	if err != nil {
 		return nil, err
