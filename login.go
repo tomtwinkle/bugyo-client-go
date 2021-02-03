@@ -33,7 +33,7 @@ func (b *bugyoClient) Login() error {
 
 func (b *bugyoClient) getToken() error {
 	// https://id.obc.jp/{tenantCode}
-	uri := fmt.Sprintf("%s/%s", baseUri, b.config.TenantCode)
+	uri := fmt.Sprintf(urlLoginPage, b.config.TenantCode)
 	doc, err := b.get(uri)
 	if err != nil {
 		return err
@@ -47,14 +47,13 @@ func (b *bugyoClient) getToken() error {
 
 func (b *bugyoClient) checkAuthentication() error {
 	// https://id.obc.jp/{tenantCode}/login/CheckAuthenticationMethod
-	uri := fmt.Sprintf("%s/%s", baseUri, b.config.TenantCode)
-	endpoint := "login/CheckAuthenticationMethod"
+	uri := fmt.Sprintf(urlCheckAuthenticationMethod, b.config.TenantCode)
 
 	body := url.Values{}
 	body.Set("OBCiD", b.config.OBCiD)
 	body.Set("isBugyoCloud", "false")
 
-	_, err := b.post(uri, endpoint, body)
+	_, err := b.post(uri, body)
 	if err != nil {
 		return err
 	}
@@ -63,8 +62,7 @@ func (b *bugyoClient) checkAuthentication() error {
 
 func (b *bugyoClient) authenticate() error {
 	// https://id.obc.jp/{tenantCode}/login/login/?Length=5
-	uri := fmt.Sprintf("%s/%s", baseUri, b.config.TenantCode)
-	endpoint := "login/login/?Length=5"
+	uri := fmt.Sprintf(urlAuthenticate, b.config.TenantCode)
 
 	body := url.Values{}
 	body.Set("OBCiD", b.config.OBCiD)
@@ -72,7 +70,7 @@ func (b *bugyoClient) authenticate() error {
 	body.Set("__RequestVerificationToken", b.token)
 	body.Set("X-Requested-With", "XMLHttpRequest")
 
-	_, err := b.post(uri, endpoint, body)
+	_, err := b.post(uri, body)
 	if err != nil {
 		return err
 	}
@@ -81,7 +79,7 @@ func (b *bugyoClient) authenticate() error {
 
 func (b *bugyoClient) getUserCode() error {
 	// https://id.obc.jp/{tenantCode}/omredirect/redirect/
-	uri := fmt.Sprintf("%s/%s/omredirect/redirect/", baseUri, b.config.TenantCode)
+	uri := fmt.Sprintf(urlUserCode, b.config.TenantCode)
 	doc, err := b.get(uri)
 	if err != nil {
 		return err

@@ -8,7 +8,7 @@ import (
 )
 
 func TestBugyoClient_Login(t *testing.T) {
-	if err := godotenv.Load("../.env"); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		t.Error(err)
 		t.FailNow()
 	}

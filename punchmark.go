@@ -34,7 +34,7 @@ func (b *bugyoClient) movePunchMarkPage() error {
 		return errors.New("login required")
 	}
 	// GET: https://hromssp.obc.jp/{tenantCode}/{userCode}/timeclock/punchmark/
-	uri := fmt.Sprintf("%s/%s/%s/timeclock/punchmark/", baseUri, b.config.TenantCode, b.userCode)
+	uri := fmt.Sprintf(urlPunchmarkPage, b.config.TenantCode, b.userCode)
 	doc, err := b.get(uri)
 	if err != nil {
 		return err
@@ -51,8 +51,7 @@ func (b *bugyoClient) insertReadDateTime(clockType ClockType) error {
 		return errors.New("login required")
 	}
 	// POST https://hromssp.obc.jp/{tenantCode}/{userCode}/TimeClock/InsertReadDateTime/
-	uri := fmt.Sprintf("%s/%s/%s", baseUri, b.config.TenantCode, b.userCode)
-	endpoint := "TimeClock/InsertReadDateTime/"
+	uri := fmt.Sprintf(urlInsertReadDateTime, b.config.TenantCode, b.userCode)
 
 	body := url.Values{}
 	body.Set("ClockType", string(clockType))
@@ -63,7 +62,7 @@ func (b *bugyoClient) insertReadDateTime(clockType ClockType) error {
 	body.Set("PositionLongitude", "139.7671") // FIXME: tokyo station
 	body.Set("PositionAccuracy", "0")
 
-	_, err := b.post(uri, endpoint, body)
+	_, err := b.post(uri, body)
 	if err != nil {
 		return err
 	}
