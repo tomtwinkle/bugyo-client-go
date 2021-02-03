@@ -35,7 +35,23 @@ type BugyoConfig struct {
 	Password   string
 }
 
-func NewClient(config *BugyoConfig, debug bool) (BugyoClient, error) {
+type Options func(*options)
+
+type options struct {
+	debug bool
+}
+
+func WithDebug() Options {
+	return func(ops *options) {
+		ops.debug = true
+	}
+}
+
+func NewClient(config *BugyoConfig, opts ...Options) (BugyoClient, error) {
+	var opt options
+	for _, o := range opts {
+		o(&opt)
+	}
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		return nil, err
@@ -55,7 +71,7 @@ func NewClient(config *BugyoConfig, debug bool) (BugyoClient, error) {
 	if config.Password == "" {
 		return nil, errors.New("invalid argument: Password required")
 	}
-	return &bugyoClient{client: client, config: config, debug: debug}, nil
+	return &bugyoClient{client: client, config: config, debug: opt.debug}, nil
 }
 
 func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
