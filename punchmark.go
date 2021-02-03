@@ -1,4 +1,4 @@
-package bugyo_client_go
+package bugyoclient
 
 import (
 	"errors"
@@ -11,6 +11,8 @@ type ClockType string
 const (
 	ClockTypeClockIn  = ClockType("ClockIn")
 	ClockTypeClockOut = ClockType("ClockOut")
+	ClockTypeGoOut = ClockType("GoOut")
+	ClockTypeReturned = ClockType("Returned")
 )
 
 func (b *bugyoClient) Punchmark(clockType ClockType) error {

@@ -1,4 +1,4 @@
-package bugyo_client_go
+package bugyoclient
 
 import (
 	"errors"

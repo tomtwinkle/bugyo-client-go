@@ -1,4 +1,4 @@
-package bugyo_client_go
+package bugyoclient
 
 import (
 	"errors"
@@ -18,6 +18,7 @@ const baseUri = "https://id.obc.jp"
 type BugyoClient interface {
 	Login() error
 	IsLoggedIn() bool
+	Punchmark(clockType ClockType) error
 }
 
 type bugyoClient struct {
