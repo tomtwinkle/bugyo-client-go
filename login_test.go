@@ -4,10 +4,15 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
 func TestBugyoClient_Login(t *testing.T) {
+	if ci := os.Getenv("CI"); ci != "" {
+		t.Log("Running on CI")
+		t.SkipNow()
+	}
 	if err := godotenv.Load(".env"); err != nil {
 		t.Error(err)
 		t.FailNow()
