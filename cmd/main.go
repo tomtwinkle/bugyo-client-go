@@ -13,7 +13,6 @@ var version = "unknown"
 var revision = "unknown"
 
 func main() {
-	bcli := bugyocli.NewCLI()
 	app := cli.NewApp()
 	app.Name = "Bugyo Client CLI for Go"
 	app.Usage = "奉行クラウドCLI"
@@ -23,19 +22,30 @@ func main() {
 		{
 			Name:      "punchmark",
 			ShortName: "pm",
-			Usage: "タイムレコーダー記録を行う",
+			Usage:     "タイムレコーダーの打刻を行う",
 			Flags: []cli.Flag{
 				cli.StringFlag{
-					Name:     "type, t",
-					Usage:    "出勤: --type in or -t in" +
-						"\n\t退勤: --type out or -t out" +
+					Name: "type, t",
+					Usage: "出勤: --type in or -t in" +
+						"\n\t退出: --type out or -t out" +
 						"\n\t外出: --type go or -t go" +
 						"\n\t再入: --type return or -t return",
 					Required: true,
 					Value:    "",
 				},
+				cli.BoolFlag{
+					Name:     "verbose, v",
+					Usage:    "--verbose or -v",
+					Required: false,
+				},
 			},
 			Action: func(c *cli.Context) error {
+				var bcli bugyocli.CLI
+				if c.Bool("verbose") {
+					bcli = bugyocli.NewCLI(true)
+				} else {
+					bcli = bugyocli.NewCLI(false)
+				}
 				switch c.String("type") {
 				case "in":
 					return bcli.PunchMark(bugyoclient.ClockTypeClockIn)
