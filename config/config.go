@@ -6,7 +6,9 @@ import (
 	"github.com/manifoldco/promptui"
 	bugyoclient "github.com/tomtwinkle/bugyo-client-go"
 	"gopkg.in/yaml.v3"
+	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -18,26 +20,39 @@ type configYaml struct {
 	Password   string `yaml:"password"`
 }
 
-type config struct{}
+type config struct {
+	ConfigPath string
+}
 
 type Config interface {
 	Init() (*bugyoclient.BugyoConfig, error)
 }
 
 func NewConfig() Config {
-	return &config{}
+	return &config{ConfigPath: getConfigPath()}
 }
 
-func (s *config) Init() (*bugyoclient.BugyoConfig, error) {
-	_, err := os.Stat(configFile)
-	if os.IsNotExist(err) {
-		return s.writeConfig()
+func getConfigPath() string {
+	execPath, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
 	}
-	return s.readConfig()
+	execDirPath := filepath.Dir(execPath)
+	return filepath.Join(execDirPath, configFile)
 }
 
-func (s *config) readConfig() (*bugyoclient.BugyoConfig, error) {
-	file, err := os.Open(configFile)
+func (c *config) Init() (*bugyoclient.BugyoConfig, error) {
+	if _, err := os.Stat(c.ConfigPath); err != nil {
+		if !os.IsNotExist(err) {
+			return nil, err
+		}
+		return c.writeConfig()
+	}
+	return c.readConfig()
+}
+
+func (c *config) readConfig() (*bugyoclient.BugyoConfig, error) {
+	file, err := os.Open(c.ConfigPath)
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +62,16 @@ func (s *config) readConfig() (*bugyoclient.BugyoConfig, error) {
 	if err := d.Decode(&cfg); err != nil {
 		return nil, err
 	}
+
+	if cfg.TenantCode == "" {
+		return nil, errors.New(fmt.Sprintf("tenant_code is Required [%s]", c.ConfigPath))
+	}
+	if cfg.OBCiD == "" {
+		return nil, errors.New(fmt.Sprintf("obc_id is Required [%s]", c.ConfigPath))
+	}
+	if cfg.Password == "" {
+		return nil, errors.New(fmt.Sprintf("password is Required [%s]", c.ConfigPath))
+	}
 	return &bugyoclient.BugyoConfig{
 		TenantCode: cfg.TenantCode,
 		OBCiD:      cfg.OBCiD,
@@ -54,21 +79,21 @@ func (s *config) readConfig() (*bugyoclient.BugyoConfig, error) {
 	}, nil
 }
 
-func (s *config) writeConfig() (*bugyoclient.BugyoConfig, error) {
-	tenantCode, err := s.inputTenant()
+func (c *config) writeConfig() (*bugyoclient.BugyoConfig, error) {
+	tenantCode, err := c.inputTenant()
 	if err != nil {
 		return nil, err
 	}
-	obcId, err := s.inputOBCiD()
+	obcId, err := c.inputOBCiD()
 	if err != nil {
 		return nil, err
 	}
-	password, err := s.inputPassword()
+	password, err := c.inputPassword()
 	if err != nil {
 		return nil, err
 	}
 
-	file, err := os.Create(configFile)
+	file, err := os.Create(c.ConfigPath)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +115,7 @@ func (s *config) writeConfig() (*bugyoclient.BugyoConfig, error) {
 	}, nil
 }
 
-func (s *config) inputTenant() (string, error) {
+func (c *config) inputTenant() (string, error) {
 	validate := func(input string) error {
 		if len(input) == 0 {
 			return errors.New("テナントコードは必須です")
@@ -109,7 +134,7 @@ func (s *config) inputTenant() (string, error) {
 	return result, nil
 }
 
-func (s *config) inputOBCiD() (string, error) {
+func (c *config) inputOBCiD() (string, error) {
 	validate := func(input string) error {
 		_, err := strconv.ParseFloat(input, 64)
 		if err != nil {
@@ -132,7 +157,7 @@ func (s *config) inputOBCiD() (string, error) {
 	return result, nil
 }
 
-func (s *config) inputPassword() (string, error) {
+func (c *config) inputPassword() (string, error) {
 	validate := func(input string) error {
 		if len(input) == 0 {
 			return errors.New("パスワードは必須です")
@@ -142,6 +167,7 @@ func (s *config) inputPassword() (string, error) {
 	prompt := promptui.Prompt{
 		Label:    fmt.Sprintf("パスワードを入力してください"),
 		Validate: validate,
+		Mask:     '*',
 	}
 	result, err := prompt.Run()
 	if err != nil {
