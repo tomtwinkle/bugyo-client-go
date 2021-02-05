@@ -1,7 +1,15 @@
 # bugyo-client-go
 Bugyo Cloud Punchmark Client for go
 
-# How to use
+# Bugyo CLI
+
+WIP
+
+```shell
+
+```
+
+# How to use client
 
 ```shell
 go get github.com/tomtwinkle/bugyo-client-go
