@@ -1,7 +1,15 @@
 # bugyo-client-go
 Bugyo Cloud Punchmark Client for go
 
-# How to use
+# Bugyo CLI
+
+WIP
+
+```shell
+
+```
+
+# How to use client
 
 ```shell
 go get github.com/tomtwinkle/bugyo-client-go
@@ -34,7 +42,15 @@ func main() {
 }
 ```
 
-# How to run
+# How to develop
+
+- download go modules
+
+```shell
+go mod download
+```
+
+# How to run test
 
 - create `.env` file
 ```config:.env
