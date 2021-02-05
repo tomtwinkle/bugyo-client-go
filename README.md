@@ -34,7 +34,15 @@ func main() {
 }
 ```
 
-# How to run
+# How to develop
+
+- download go modules
+
+```shell
+go mod download
+```
+
+# How to run test
 
 - create `.env` file
 ```config:.env
