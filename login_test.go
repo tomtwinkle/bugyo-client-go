@@ -1,14 +1,19 @@
-package bugyo_client_go
+package bugyoclient
 
 import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
 func TestBugyoClient_Login(t *testing.T) {
-	if err := godotenv.Load("../.env"); err != nil {
+	if ci := os.Getenv("CI"); ci != "" {
+		t.Log("Running on CI")
+		t.SkipNow()
+	}
+	if err := godotenv.Load(".env"); err != nil {
 		t.Error(err)
 		t.FailNow()
 	}
@@ -18,7 +23,7 @@ func TestBugyoClient_Login(t *testing.T) {
 		t.FailNow()
 	}
 
-	c, err := NewClient(&config, true)
+	c, err := NewClient(&config, WithDebug())
 	if !assert.NoError(t, err) {
 		t.FailNow()
 	}
