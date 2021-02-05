@@ -6,7 +6,14 @@ before:
     - go mod tidy
 builds:
   - main: ./cmd
-    binary: git-bump
+    binary: bugyoclient
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - 386
     ldflags:
       - -s -w
       - -X main.version={{.Version}}
@@ -15,12 +22,8 @@ builds:
       - CGO_ENABLED=0
 archives:
   - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-    replacements:
-      darwin: darwin
-      linux: linux
-      windows: windows
-      386: i386
-      amd64: x86_64
+    files:
+      - README.md
     format_overrides:
       - goos: windows
         format: zip
