@@ -7,7 +7,7 @@ Bugyo Cloud Punchmark Client for go
 - Install with PowerShell
 
 ```poweshell
-iwr https://github.com/tomtwinkle/bugyo-client-go/releases/download/v0.0.10/bugyoclient_windows_amd64.zip -OutFile bugyoclient.zip && Expand-Archive -Path bugyoclient.zip && rm bugyoclient.zip
+iwr https://github.com/tomtwinkle/bugyo-client-go/releases/download/v0.10.6/bugyoclient_windows_amd64.zip -OutFile bugyoclient.zip && Expand-Archive -Path bugyoclient.zip && rm bugyoclient.zip
 cd bugyoclient
 .\bugyoclient.exe help
 ```
@@ -87,6 +87,17 @@ func main() {
 go mod download
 ```
 
+- tag release
+
+```shell
+git fetch
+git switch main
+git pull origin main
+
+git tag -a vX.X.X -m "release comment"
+git push origin vX.X.X
+```
+
 # How to run test
 
 - create `.env` file
@@ -99,5 +110,5 @@ PASSWORD=<You Password>
 - go test login
 
 ```shell
-go test -v ./client/login_test.go
+go test login_test.go
 ```
