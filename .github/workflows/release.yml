@@ -24,7 +24,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update README
         run: |
-          VERSION=$(git describe --abbrev=0 --tags)
+          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          chmod -x .github/readme_update
           sh .github/readme_update version $VERSION folderfile bugyoclient
       - name: Commit files
         run: |
