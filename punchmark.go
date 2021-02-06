@@ -11,7 +11,7 @@ type ClockType string
 const (
 	ClockTypeClockIn  = ClockType("ClockIn")
 	ClockTypeClockOut = ClockType("ClockOut")
-	ClockTypeGoOut = ClockType("GoOut")
+	ClockTypeGoOut    = ClockType("GoOut")
 	ClockTypeReturned = ClockType("Returned")
 )
 

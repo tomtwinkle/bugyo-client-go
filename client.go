@@ -14,12 +14,12 @@ import (
 const userAgent = "Bugyo-Client-Go/1.0.0"
 
 const (
-	urlLoginPage = "https://id.obc.jp/%s"
+	urlLoginPage                 = "https://id.obc.jp/%s"
 	urlCheckAuthenticationMethod = "https://id.obc.jp/%s/login/CheckAuthenticationMethod"
-	urlAuthenticate = "https://id.obc.jp/%s/login/login/?Length=5"
-	urlUserCode = "https://id.obc.jp/%s/omredirect/redirect/"
-	urlPunchmarkPage = "https://hromssp.obc.jp/%s/%s/timeclock/punchmark/"
-	urlInsertReadDateTime = "https://hromssp.obc.jp/%s/%s/TimeClock/InsertReadDateTime/"
+	urlAuthenticate              = "https://id.obc.jp/%s/login/login/?Length=5"
+	urlUserCode                  = "https://id.obc.jp/%s/omredirect/redirect/"
+	urlPunchmarkPage             = "https://hromssp.obc.jp/%s/%s/timeclock/punchmark/"
+	urlInsertReadDateTime        = "https://hromssp.obc.jp/%s/%s/TimeClock/InsertReadDateTime/"
 )
 
 type BugyoClient interface {
@@ -92,7 +92,10 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	defer b.setLastReq(req.URL)
 
 	if b.debug {
-		reqDump, _ := httputil.DumpRequest(req, false)
+		reqDump, err := httputil.DumpRequest(req, false)
+		if err != nil {
+			return nil, err
+		}
 		log.Printf("request=%q\n", reqDump)
 	}
 	res, err := b.client.Do(req)
@@ -101,7 +104,10 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	}
 	defer res.Body.Close()
 	if b.debug {
-		resDump, _ := httputil.DumpResponse(res, true)
+		resDump, err := httputil.DumpResponse(res, true)
+		if err != nil {
+			return nil, err
+		}
 		log.Printf("response=%q\n", resDump)
 	}
 	if res.StatusCode != http.StatusOK {
@@ -115,6 +121,7 @@ func (b *bugyoClient) get(uri string) (*goquery.Document, error) {
 	return doc, nil
 }
 
+// nolint:unparam
 func (b *bugyoClient) post(uri string, body url.Values) (*goquery.Document, error) {
 	req, err := http.NewRequest(http.MethodPost, uri, strings.NewReader(body.Encode()))
 	if err != nil {
@@ -130,7 +137,10 @@ func (b *bugyoClient) post(uri string, body url.Values) (*goquery.Document, erro
 	defer b.setLastReq(req.URL)
 
 	if b.debug {
-		reqDump, _ := httputil.DumpRequest(req, true)
+		reqDump, err := httputil.DumpRequest(req, true)
+		if err != nil {
+			return nil, err
+		}
 		log.Printf("request=%q\n", reqDump)
 	}
 	res, err := b.client.Do(req)
@@ -139,7 +149,10 @@ func (b *bugyoClient) post(uri string, body url.Values) (*goquery.Document, erro
 	}
 	defer res.Body.Close()
 	if b.debug {
-		resDump, _ := httputil.DumpResponse(res, true)
+		resDump, err := httputil.DumpResponse(res, true)
+		if err != nil {
+			return nil, err
+		}
 		log.Printf("response=%q\n", resDump)
 	}
 	if res.StatusCode != http.StatusOK {
