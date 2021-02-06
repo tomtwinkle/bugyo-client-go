@@ -30,6 +30,7 @@ jobs:
           echo VERSION=$VERSION
           echo FOLDERNAME=$FOLDERNAME
 
+          go build -o .github/readme_update .github/readme_update.go
           chmod +x .github/readme_update
           sh .github/readme_update version $VERSION folderfile $FOLDERNAME
       - name: Commit files
