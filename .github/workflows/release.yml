@@ -25,8 +25,12 @@ jobs:
       - name: Update README
         run: |
           VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
-          chmod -x .github/readme_update
-          sh .github/readme_update version $VERSION folderfile bugyoclient
+          FOLDERNAME=bugyoclient
+
+          echo VERSION=$VERSION
+          echo FOLDERNAME=$FOLDERNAME
+
+          sh .github/readme_update version $VERSION folderfile $FOLDERNAME
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
