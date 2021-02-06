@@ -87,6 +87,23 @@ func main() {
 go mod download
 ```
 
+- tag release
+
+use [ysugimoto/gov](https://github.com/ysugimoto/gov)
+
+```shell
+go get -u github.com/ysugimoto/gov
+```
+
+```shell
+git fetch
+git switch main
+git pull origin main
+
+gov [major|minor|patch] [-m memo]
+git push origin vX.X.X
+```
+
 # How to run test
 
 - create `.env` file
