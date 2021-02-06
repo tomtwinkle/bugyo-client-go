@@ -30,12 +30,14 @@ jobs:
           echo VERSION=$VERSION
           echo FOLDERNAME=$FOLDERNAME
 
-          sh .github/readme_update version $VERSION folderfile $FOLDERNAME
+          go build -o .github/readme_update .github/readme_update.go
+          chmod +x .github/readme_update
+          .github/readme_update version $VERSION folderfile $FOLDERNAME
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .
+          git add README.md
           git commit -m "update README.md" -a
       - name: Push changes
         uses: ad-m/github-push-action@master

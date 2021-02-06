@@ -11,7 +11,7 @@ const ReadmeTemplateFile = "./README.md.tmpl"
 const ReadmeFile = "../README.md"
 
 // export GOOS=linux
-// export GOARCH=386
+// export GOARCH=amd64
 // go build -o .github/readme_update .github/readme_update.go
 func main() {
 	args := os.Args[1:]
