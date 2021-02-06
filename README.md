@@ -1,12 +1,15 @@
 # bugyo-client-go
 Bugyo Cloud Punchmark Client for go
 
-# Bugyo CLI
+# Bugyo CLI Installation
 
-WIP
+## Windows
+- install
 
-```shell
-
+```poweshell
+iwr https://github.com/tomtwinkle/bugyo-client-go/releases/download/v0.0.10/bugyoclient_windows_amd64.zip -OutFile bugyoclient.zip && Expand-Archive -Path bugyoclient.zip && rm bugyoclient.zip
+cd bugyoclient
+.\bugyoclient.exe help
 ```
 
 # How to use client
