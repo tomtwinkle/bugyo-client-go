@@ -33,13 +33,7 @@ jobs:
 
 workflows:
   version: 2
-  build_and_push:
+  build:
     jobs:
       - build:
           name: build
-      - push:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
