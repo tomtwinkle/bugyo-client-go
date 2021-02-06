@@ -89,18 +89,12 @@ go mod download
 
 - tag release
 
-use [ysugimoto/gov](https://github.com/ysugimoto/gov)
-
-```shell
-go get -u github.com/ysugimoto/gov
-```
-
 ```shell
 git fetch
 git switch main
 git pull origin main
 
-gov [major|minor|patch] [-m memo]
+git tag -a vX.X.X -m "release comment"
 git push origin vX.X.X
 ```
 
