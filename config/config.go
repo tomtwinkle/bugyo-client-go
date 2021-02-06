@@ -64,13 +64,13 @@ func (c *config) readConfig() (*bugyoclient.BugyoConfig, error) {
 	}
 
 	if cfg.TenantCode == "" {
-		return nil, errors.New(fmt.Sprintf("tenant_code is Required [%s]", c.ConfigPath))
+		return nil, fmt.Errorf("tenant_code is Required [%s]", c.ConfigPath)
 	}
 	if cfg.OBCiD == "" {
-		return nil, errors.New(fmt.Sprintf("obc_id is Required [%s]", c.ConfigPath))
+		return nil, fmt.Errorf("obc_id is Required [%s]", c.ConfigPath)
 	}
 	if cfg.Password == "" {
-		return nil, errors.New(fmt.Sprintf("password is Required [%s]", c.ConfigPath))
+		return nil, fmt.Errorf("password is Required [%s]", c.ConfigPath)
 	}
 	return &bugyoclient.BugyoConfig{
 		TenantCode: cfg.TenantCode,
@@ -117,7 +117,7 @@ func (c *config) writeConfig() (*bugyoclient.BugyoConfig, error) {
 
 func (c *config) inputTenant() (string, error) {
 	validate := func(input string) error {
-		if len(input) == 0 {
+		if input == "" {
 			return errors.New("テナントコードは必須です")
 		}
 		return nil
@@ -140,7 +140,7 @@ func (c *config) inputOBCiD() (string, error) {
 		if err != nil {
 			return errors.New("OBCiDは数字です")
 		}
-		if len(input) == 0 {
+		if input == "" {
 			return errors.New("OBCiDは必須です")
 		}
 		return nil
@@ -159,7 +159,7 @@ func (c *config) inputOBCiD() (string, error) {
 
 func (c *config) inputPassword() (string, error) {
 	validate := func(input string) error {
-		if len(input) == 0 {
+		if input == "" {
 			return errors.New("パスワードは必須です")
 		}
 		return nil

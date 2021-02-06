@@ -88,8 +88,8 @@ func (b *bugyoClient) getUserCode() error {
 	if homeUri, ok := doc.Find("#ApplicationRoot").Attr("href"); ok {
 		// /{tenantCode}/{userCode}
 		bCodes := strings.Split(homeUri, "/")
-		if len(bCodes) == 3 {
-			b.userCode = bCodes[2]
+		if len(bCodes) > 0 {
+			b.userCode = bCodes[len(bCodes)-1]
 		}
 	} else {
 		return errors.New("no user code")

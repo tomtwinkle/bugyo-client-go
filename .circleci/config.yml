@@ -9,10 +9,11 @@ jobs:
     executor:
       name: build
     environment:
+      TEST_RESULTS: /tmp/test-results
       TENANTCODE: dummy
       OBCID: 0
       PASSWORD: dummy
-    working_directory: /go/src/github.com/tomtwinkle/bugyo-client-go
+    working_directory: ~/app
     steps:
       - checkout
       - run: mkdir -p $TEST_RESULTS
@@ -33,13 +34,7 @@ jobs:
 
 workflows:
   version: 2
-  build_and_push:
+  build:
     jobs:
       - build:
           name: build
-      - push:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
