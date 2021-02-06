@@ -4,12 +4,46 @@ Bugyo Cloud Punchmark Client for go
 # Bugyo CLI Installation
 
 ## Windows
-- install
+- Install with PowerShell
 
 ```poweshell
 iwr https://github.com/tomtwinkle/bugyo-client-go/releases/download/v0.0.10/bugyoclient_windows_amd64.zip -OutFile bugyoclient.zip && Expand-Archive -Path bugyoclient.zip && rm bugyoclient.zip
 cd bugyoclient
 .\bugyoclient.exe help
+```
+
+# How to use Bugyo CLI
+
+- 出勤
+
+```shell
+.\bugyoclient.exe punchmark --type in
+or 
+.\bugyoclient.exe pm -t in
+```
+
+- 退出
+
+```shell
+.\bugyoclient.exe punchmark --type out
+or 
+.\bugyoclient.exe pm -t out
+```
+
+- 外出
+
+```shell
+.\bugyoclient.exe punchmark --type go
+or 
+.\bugyoclient.exe pm -t go
+```
+
+- 再入
+
+```shell
+.\bugyoclient.exe punchmark --type return
+or 
+.\bugyoclient.exe pm -t return
 ```
 
 # How to use client
