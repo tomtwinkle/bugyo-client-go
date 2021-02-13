@@ -41,5 +41,6 @@ func (c cli) PunchMark(clockType bugyoclient.ClockType) error {
 	if err := c.BugyoClient.Punchmark(clockType); err != nil {
 		return err
 	}
+	log.Printf("success Punchmark [%s]", clockType)
 	return nil
 }
