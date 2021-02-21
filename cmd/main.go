@@ -41,11 +41,11 @@ func main() {
 			},
 			Action: func(c *cli.Context) error {
 				var bcli bugyocli.CLI
-				if c.Bool("verbose") {
-					bcli = bugyocli.NewCLI(true)
-				} else {
-					bcli = bugyocli.NewCLI(false)
-				}
+					if c.Bool("verbose") {
+						bcli = bugyocli.NewCLI(true)
+					} else {
+						bcli = bugyocli.NewCLI(false)
+					}
 				switch c.String("type") {
 				case "in":
 					return bcli.PunchMark(bugyoclient.ClockTypeClockIn)
